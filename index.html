@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aeternel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg:      #0a0506;
+  --border:  rgba(66,3,3,0.2);
+  --crimson: #420303;
+  --ember:   #7a1a1a;
+  --rust:    #9e3a3a;
+  --muted:   #b05050;
+  --text:    #ede8e8;
+  --text-2:  #7a6a6a;
+  --text-3:  #332525;
+}
+
+html, body {
+  width:100%; height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter', sans-serif;
+  font-weight:300;
+  overflow:hidden;
+  cursor:none;
+}
+
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.022; pointer-events:none; z-index:999;
+}
+
+/* soft glow behind brand */
+.glow {
+  position:fixed;
+  width:500px; height:300px;
+  left:50%; top:50%;
+  transform:translate(-50%, -52%);
+  background:radial-gradient(ellipse, rgba(66,3,3,0.28) 0%, transparent 70%);
+  pointer-events:none; z-index:1;
+  filter:blur(10px);
+}
+
+/* cursor */
+.cur { position:fixed; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); }
+#cdot div { width:3px; height:3px; background:var(--rust); border-radius:50%; }
+#cring div {
+  width:20px; height:20px;
+  border:1px solid rgba(122,26,26,0.4); border-radius:50%;
+  transition:width .25s, height .25s;
+}
+
+/* page grid */
+main {
+  width:100vw; height:100vh;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  position:relative; z-index:10;
+}
+
+/* ── NAV ── */
+nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:2.4rem 4vw;
+  border-bottom:1px solid var(--border);
+  opacity:0; animation:up .7s ease forwards; animation-delay:.1s;
+}
+.nav-left {
+  display:flex; align-items:center; gap:1rem;
+}
+.nav-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--ember);
+  animation:pulse 2.4s ease infinite;
+}
+.nav-name {
+  font-family:'Inter', sans-serif;
+  font-weight:500; font-size:.82rem;
+  letter-spacing:.14em; text-transform:uppercase;
+  color:var(--text);
+}
+.nav-right {
+  font-family:'DM Mono', monospace;
+  font-size:.58rem; letter-spacing:.1em;
+  color:var(--text-3);
+  display:flex; gap:2rem;
+}
+
+/* ── HERO ── */
+.hero {
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center;
+  padding:0 4vw;
+  gap:0;
+}
+
+.coming-tag {
+  font-family:'DM Mono', monospace;
+  font-size:.6rem; letter-spacing:.3em;
+  color:var(--rust); text-transform:uppercase;
+  opacity:0; transform:translateY(8px);
+  animation:up .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:.35s;
+  margin-bottom:2rem;
+}
+
+.brand {
+  font-family:'Inter', sans-serif;
+  font-weight:500;
+  font-size:clamp(4rem, 13vw, 10rem);
+  letter-spacing:-.01em;
+  line-height:1;
+  color:var(--text);
+  opacity:0; transform:translateY(22px);
+  animation:up 1.1s cubic-bezier(.16,1,.3,1) forwards; animation-delay:.5s;
+}
+
+.brand-sub {
+  font-family:'Inter', sans-serif;
+  font-weight:300;
+  font-size:clamp(.75rem, 1.4vw, .95rem);
+  letter-spacing:.35em; text-transform:uppercase;
+  color:var(--text-2);
+  margin-top:1.1rem;
+  opacity:0; transform:translateY(10px);
+  animation:up .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:.75s;
+}
+
+/* thin rule */
+.rule {
+  width:1px; height:40px;
+  background:linear-gradient(to bottom, var(--border), transparent);
+  margin:2.4rem auto;
+  opacity:0; animation:up .7s ease forwards; animation-delay:.9s;
+}
+
+.desc {
+  font-family:'Inter', sans-serif;
+  font-weight:300;
+  font-size:clamp(.82rem, 1.3vw, .94rem);
+  color:var(--text-2);
+  line-height:1.75;
+  max-width:46ch;
+  opacity:0; transform:translateY(10px);
+  animation:up .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:1s;
+}
+.desc strong {
+  color:var(--text); font-weight:400;
+}
+
+.services {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:.5rem;
+  margin-top:2rem;
+  opacity:0; transform:translateY(8px);
+  animation:up .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:1.15s;
+}
+.svc {
+  font-family:'DM Mono', monospace;
+  font-size:.56rem; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--text-2);
+  padding:.3rem .7rem;
+  border:1px solid var(--border);
+  cursor:none;
+  transition:color .2s, border-color .2s;
+}
+.svc:hover { color:var(--muted); border-color:rgba(122,26,26,0.4); }
+
+/* ── BOTTOM ── */
+.bottom {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:1.6rem 4vw;
+  border-top:1px solid var(--border);
+  opacity:0; animation:up .7s ease forwards; animation-delay:1.3s;
+}
+
+/* countdown */
+.cd { display:flex; align-items:baseline; gap:1.6rem; }
+.cd-u { display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+.cd-n {
+  font-family:'DM Mono', monospace; font-weight:400;
+  font-size:clamp(1rem,2vw,1.4rem);
+  color:var(--text); letter-spacing:.04em;
+}
+.cd-l {
+  font-family:'DM Mono', monospace;
+  font-size:.42rem; letter-spacing:.22em;
+  color:var(--text-3); text-transform:uppercase;
+}
+.cd-sep { color:var(--text-3); font-family:'DM Mono',monospace; font-size:.9rem; }
+
+/* email */
+.email-side { display:flex; flex-direction:column; align-items:flex-end; gap:.5rem; }
+.email-lbl {
+  font-family:'DM Mono', monospace;
+  font-size:.5rem; letter-spacing:.18em;
+  color:var(--text-3); text-transform:uppercase;
+}
+.email-row { display:flex; }
+.ei {
+  background:transparent; border:none;
+  border-bottom:1px solid var(--border);
+  outline:none; color:var(--text);
+  font-family:'DM Mono', monospace; font-size:.7rem;
+  letter-spacing:.08em;
+  padding:.45rem .7rem .45rem 0;
+  width:clamp(150px,17vw,210px);
+  transition:border-color .3s;
+}
+.ei::placeholder { color:var(--text-3); }
+.ei:focus { border-color:rgba(122,26,26,0.5); }
+.eb {
+  background:none; border:none;
+  border-bottom:1px solid var(--border);
+  color:var(--rust);
+  font-family:'DM Mono', monospace;
+  font-size:.56rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:.45rem 0 .45rem .8rem;
+  cursor:none;
+  transition:color .2s, border-color .2s;
+}
+.eb:hover { color:var(--muted); border-color:rgba(122,26,26,0.5); }
+.eok {
+  font-family:'DM Mono', monospace;
+  font-size:.5rem; letter-spacing:.1em; color:var(--rust);
+  opacity:0; transition:opacity .5s; pointer-events:none;
+}
+.eok.on { opacity:1; }
+
+@keyframes up    { to { opacity:1; transform:translateY(0); } }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.25;} }
+</style>
+</head>
+<body>
+
+<div class="glow"></div>
+<div class="cur" id="cdot"><div></div></div>
+<div class="cur" id="cring"><div id="cre"></div></div>
+
+<main>
+
+  <nav>
+    <div class="nav-left">
+      <div class="nav-dot"></div>
+      <span class="nav-name">Aeternel</span>
+    </div>
+    <div class="nav-right">
+      <span>Products</span>
+      <span>Consultancy</span>
+      <span>Est. 2026</span>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <p class="coming-tag">Coming soon</p>
+
+    <h1 class="brand">Aeternel</h1>
+    <p class="brand-sub">Product Studio &amp; Tech Consultancy</p>
+
+    <div class="rule"></div>
+
+    <p class="desc">
+      We <strong>build products</strong> from zero to one — and partner with
+      engineering teams as a <strong>technology consultancy</strong> to
+      architect, scale, and sharpen what they're already building.
+    </p>
+
+    <div class="services">
+      <div class="svc">Product Design</div>
+      <div class="svc">Engineering</div>
+      <div class="svc">Tech Strategy</div>
+      <div class="svc">Systems Architecture</div>
+      <div class="svc">Scale &amp; Growth</div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="cd">
+      <div class="cd-u"><span class="cd-n" id="dd">—</span><span class="cd-l">Days</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-u"><span class="cd-n" id="hh">—</span><span class="cd-l">Hrs</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-u"><span class="cd-n" id="mm">—</span><span class="cd-l">Min</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-u"><span class="cd-n" id="ss">—</span><span class="cd-l">Sec</span></div>
+    </div>
+
+    <div class="email-side">
+      <span class="email-lbl">Notify me at launch</span>
+      <div class="email-row">
+        <input class="ei" type="email" placeholder="you@domain.com" id="ei" autocomplete="off">
+        <button class="eb" onclick="notify()">notify me</button>
+      </div>
+      <span class="eok" id="eok">noted — we'll reach out.</span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const dot=document.getElementById('cdot'),ring=document.getElementById('cring'),re=document.getElementById('cre');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+(function l(){ rx+=(mx-rx)*.13; ry+=(my-ry)*.13; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(l); })();
+document.querySelectorAll('button,input,.svc').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ re.style.width='30px'; re.style.height='30px'; });
+  el.addEventListener('mouseleave',()=>{ re.style.width='20px'; re.style.height='20px'; });
+});
+
+const tgt=new Date(Date.now()+180*864e5);
+function pad(n,l=2){ return String(n).padStart(l,'0'); }
+function tick(){
+  const d=Math.max(0,tgt-Date.now());
+  document.getElementById('dd').textContent=pad(Math.floor(d/864e5),3);
+  document.getElementById('hh').textContent=pad(Math.floor(d%864e5/36e5));
+  document.getElementById('mm').textContent=pad(Math.floor(d%36e5/6e4));
+  document.getElementById('ss').textContent=pad(Math.floor(d%6e4/1e3));
+}
+tick(); setInterval(tick,1000);
+
+function notify(){
+  const v=document.getElementById('ei').value.trim(),ok=document.getElementById('eok');
+  if(!v||!v.includes('@')){ document.getElementById('ei').style.borderColor='rgba(122,26,26,.6)'; setTimeout(()=>document.getElementById('ei').style.borderColor='',1200); return; }
+  document.getElementById('ei').value=''; ok.classList.add('on'); setTimeout(()=>ok.classList.remove('on'),4000);
+}
+document.getElementById('ei').addEventListener('keydown',e=>{ if(e.key==='Enter') notify(); });
+</script>
+</body>
+</html>
